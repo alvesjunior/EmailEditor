@@ -43,8 +43,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
-import { EmailEditor } from '@tag/email-editor';
-import type { EmailEditorOptions } from '@tag/email-editor';
+import { EmailEditor } from 'email-editor';
+import type { EmailEditorOptions } from 'email-editor';
 
 // ============================================
 // Props

@@ -8,7 +8,7 @@ npm create vue@latest my-app
 cd my-app
 
 # Instalar o Email Editor
-npm install @tag/email-editor
+npm install email-editor
 
 # Copiar os arquivos deste exemplo
 cp EmailEditor.vue src/components/

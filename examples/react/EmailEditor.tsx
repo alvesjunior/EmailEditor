@@ -6,8 +6,8 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import { EmailEditor as EmailEditorLib } from '@tag/email-editor';
-import type { EmailEditorOptions, EmailTemplate } from '@tag/email-editor';
+import { EmailEditor as EmailEditorLib } from 'email-editor';
+import type { EmailEditorOptions, EmailTemplate } from 'email-editor';
 
 // ============================================
 // Types

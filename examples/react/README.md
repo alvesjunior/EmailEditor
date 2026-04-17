@@ -8,7 +8,7 @@ npx create-react-app my-app --template typescript
 cd my-app
 
 # Instalar o Email Editor
-npm install @tag/email-editor
+npm install email-editor
 
 # Copiar os arquivos deste exemplo
 cp EmailEditor.tsx src/components/

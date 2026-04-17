@@ -1,5 +1,5 @@
 {
-  "name": "@tag/email-editor",
+  "name": "email-editor",
   "version": "1.0.0",
   "description": "Visual email editor (WYSIWYG) based on GrapesJS + MJML",
   "main": "dist/email-editor.umd.js",

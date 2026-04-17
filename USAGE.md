@@ -9,7 +9,7 @@ Editor de email visual (WYSIWYG) baseado em GrapesJS + MJML. Gera HTML compative
 ### Via NPM
 
 ```bash
-npm install @tag/email-editor
+npm install email-editor
 ```
 
 ### Via CDN / Build local
@@ -125,7 +125,7 @@ cp dist/email-editor.css public/vendor/email-editor/
 </template>
 
 <script>
-import EmailEditor from '@tag/email-editor';
+import EmailEditor from 'email-editor';
 
 export default {
   data() {
@@ -168,7 +168,7 @@ export default {
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import EmailEditor from '@tag/email-editor';
+import EmailEditor from 'email-editor';
 
 const emailContent = ref(null);
 let editor = null;
@@ -202,7 +202,7 @@ defineExpose({
 
 ```jsx
 import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
-import EmailEditorLib from '@tag/email-editor';
+import EmailEditorLib from 'email-editor';
 
 const EmailEditor = forwardRef(({ height = '600px', onChange, initialContent }, ref) => {
   const textareaRef = useRef(null);

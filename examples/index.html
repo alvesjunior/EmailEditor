@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Editor - Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1d23;
+      min-height: 100vh;
+    }
+
+    .demo-header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(79, 70, 229, 0.3);
+    }
+
+    .demo-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .demo-header-logo {
+      width: 28px;
+      height: 28px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .demo-header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .demo-header h1 span {
+      font-weight: 400;
+      opacity: 0.7;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+
+    .demo-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .demo-actions button {
+      padding: 7px 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .demo-actions button:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .demo-actions button svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .demo-actions .btn-close {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+      opacity: 0.7;
+    }
+
+    .demo-actions .btn-close:hover {
+      opacity: 1;
+      background: rgba(255,0,0,0.15);
+      border-color: rgba(255,0,0,0.2);
+    }
+
+    .template-bar {
+      padding: 10px 24px;
+      background: #ffffff;
+      border-bottom: 1px solid #e4e7ec;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 44px;
+    }
+
+    .template-bar label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .template-bar select {
+      padding: 5px 28px 5px 10px;
+      border: 1.5px solid #e4e7ec;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 500;
+      color: #1a1d23;
+      background: #f8f9fb;
+      cursor: pointer;
+      transition: all 0.15s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    .template-bar select:hover {
+      border-color: #d1d5db;
+      background-color: #fff;
+    }
+
+    .template-bar select:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .demo-container { padding: 0; }
+
+    textarea#email-content { display: none; }
+
+    /* Output Panel — Centered overlay */
+    .output-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .output-overlay.active {
+      display: flex;
+      animation: ee-fade-in 0.2s ease;
+    }
+
+    .output-panel {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2), 0 4px 16px rgba(0,0,0,0.08);
+      overflow: hidden;
+      width: 100%;
+      max-width: 1100px;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      animation: ee-scale-in 0.2s ease;
+    }
+
+    .output-panel-header {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #e4e7ec;
+      background: #f8f9fb;
+      flex-shrink: 0;
+    }
+
+    .output-panel-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1d23;
+    }
+
+    .output-panel-header .spacer {
+      flex: 1;
+    }
+
+    .output-panel-header .btn-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border: 1.5px solid #e4e7ec;
+      border-radius: 6px;
+      background: #fff;
+      color: #374151;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .output-panel-header .btn-copy:hover {
+      border-color: #4f46e5;
+      color: #4f46e5;
+      background: #eef2ff;
+    }
+
+    .output-panel-header .btn-copy.copied {
+      border-color: #10b981;
+      color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .output-panel-header .btn-copy svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .output-panel-header .btn-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #9ca3af;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .output-panel-header .btn-close:hover {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .output-panel pre {
+      padding: 24px;
+      overflow: auto;
+      flex: 1;
+      font-size: 13px;
+      line-height: 1.7;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      background: #0f172a;
+      color: #e2e8f0;
+      tab-size: 2;
+      margin: 0;
+    }
+
+    .output-panel pre::selection,
+    .output-panel pre *::selection {
+      background: rgba(79, 70, 229, 0.4);
+    }
+
+    @keyframes ee-fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes ee-scale-in {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-header">
+    <div class="demo-header-left">
+      <div class="demo-header-logo">E</div>
+      <h1>Email Editor <span>v1.0</span></h1>
+    </div>
+    <div class="demo-actions">
+      <button onclick="showHTML()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        HTML
+      </button>
+      <button onclick="showMJML()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        MJML
+      </button>
+      <button onclick="showJSON()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        JSON
+      </button>
+    </div>
+  </div>
+
+  <div class="template-bar">
+    <label>Template</label>
+    <select id="template-select" onchange="loadTemplate(this.value)">
+      <option value="">Selecione um template...</option>
+    </select>
+  </div>
+
+  <div class="demo-container">
+    <textarea id="email-content" name="email_content"></textarea>
+  </div>
+
+  <div class="output-overlay" id="output-overlay" onclick="if(event.target===this)hideOutput()">
+    <div class="output-panel">
+      <div class="output-panel-header">
+        <h3 id="output-title">Output</h3>
+        <span class="spacer"></span>
+        <button class="btn-copy" id="btn-copy" onclick="copyCode()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span id="copy-label">Copiar</span>
+        </button>
+        <button class="btn-close" onclick="hideOutput()" title="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <pre id="output-code"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { EmailEditor } from '../src/EmailEditor.ts';
+
+    const editor = new EmailEditor({
+      target: '#email-content',
+      height: 'calc(100vh - 100px)',
+      tags: ['nome', 'email', 'empresa', 'produto', 'preco', 'link_cancelar', 'data_expiracao'],
+      onChange: (html) => {
+        // console.log('Content changed');
+      },
+      onReady: (ed) => {
+        console.log('Editor ready!');
+        populateTemplates(ed);
+      },
+    });
+
+    window.emailEditor = editor;
+
+    function populateTemplates(ed) {
+      const select = document.getElementById('template-select');
+      const templates = ed.getTemplates();
+      templates.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = t.name;
+        select.appendChild(opt);
+      });
+    }
+
+    window.loadTemplate = function(id) {
+      if (id) editor.loadTemplate(id);
+    };
+
+    window.showHTML = function() {
+      document.getElementById('output-title').textContent = 'HTML Output';
+      document.getElementById('output-code').textContent = editor.getHTML();
+      document.getElementById('output-overlay').classList.add('active');
+    };
+
+    window.showMJML = function() {
+      document.getElementById('output-title').textContent = 'MJML Source';
+      document.getElementById('output-code').textContent = editor.getMJML();
+      document.getElementById('output-overlay').classList.add('active');
+    };
+
+    window.showJSON = function() {
+      document.getElementById('output-title').textContent = 'JSON Output';
+      document.getElementById('output-code').textContent = JSON.stringify(editor.getJSON(), null, 2);
+      document.getElementById('output-overlay').classList.add('active');
+    };
+
+    window.hideOutput = function() {
+      document.getElementById('output-overlay').classList.remove('active');
+    };
+
+    window.copyCode = function() {
+      const code = document.getElementById('output-code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('btn-copy');
+        const label = document.getElementById('copy-label');
+        btn.classList.add('copied');
+        label.textContent = 'Copiado!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          label.textContent = 'Copiar';
+        }, 2000);
+      });
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideOutput();
+    });
+  </script>
+</body>
+</html>

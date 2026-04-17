@@ -1,0 +1,36 @@
+{
+  "name": "@tag/email-editor",
+  "version": "1.0.0",
+  "description": "Visual email editor (WYSIWYG) based on GrapesJS + MJML",
+  "main": "dist/email-editor.umd.js",
+  "module": "dist/email-editor.es.js",
+  "types": "dist/EmailEditor.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "email",
+    "editor",
+    "wysiwyg",
+    "grapesjs",
+    "mjml",
+    "drag-and-drop"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "grapesjs": "^0.22.15",
+    "grapesjs-mjml": "^1.0.8",
+    "mjml-browser": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.8"
+  }
+}

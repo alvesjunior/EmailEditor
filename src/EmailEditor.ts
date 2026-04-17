@@ -619,15 +619,19 @@ class EmailEditor {
 
     let result = '';
     try {
-      const html = this.editor.runCommand('mjml-get-html');
-      if (html && html.html) result = html.html;
+      // grapesjs-mjml registers 'mjml-code-to-html' to compile MJML → HTML
+      const output = this.editor.runCommand('mjml-code-to-html');
+      if (typeof output === 'string') {
+        result = output;
+      } else if (output && output.html) {
+        result = output.html;
+      }
     } catch (e) {
       // fallback
     }
 
     if (!result) result = this.editor.getHtml();
 
-    // Convert tag badges back to plain text variables
     return this.cleanTagBadges(result);
   }
 
@@ -706,8 +710,9 @@ class EmailEditor {
 
     let result = '';
     try {
-      const mjml = this.editor.runCommand('mjml-get-mjml');
-      if (typeof mjml === 'string') result = mjml;
+      // grapesjs-mjml registers 'mjml-code' to get the MJML source
+      const output = this.editor.runCommand('mjml-code');
+      if (typeof output === 'string') result = output;
     } catch (e) {
       // fallback
     }
